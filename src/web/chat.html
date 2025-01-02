@@ -271,10 +271,11 @@
                 "<hr>\n<p><b>Fontes</b></p>\n<div style='font-size: smaller;font-style: italic;'>\n" + 
 
                 dados_resposta.documentos.map((documento) =>{
-                    return `<p><b>${documento.metadados.titulo}</b><br>${documento.conteudo}</p>`
+                    return `<p><b>${documento.fonte}</b><br>${documento.conteudo}</p>`
                 }).join("\n") + 
                 
                 `</div>`;
+            console.log(textoResposta);
             return textoResposta;
         }
 
@@ -349,48 +350,47 @@
                         const { done, value } = await reader.read();
                         if (done) break;
                         valores_decodificados = decoder.decode(value)
-        
-                        for (let linha of valores_decodificados.split('\n')){
-                            if (linha.trim() === '') continue;
-                            try {
-                                var retorno = JSON.parse(linha.trim());
-                                if (retorno['tipo'] == 'erro') {
-                                    console.error(`${retorno['descricao']}: ${retorno['mensagem']}`);
-                                    divResposta.classList.remove("mensagem-recebida");
-                                    divResposta.classList.add("mensagem-erro");
-                                    divResposta.innerHTML = retorno['mensagem'];
-                                    habilitarCampos = true;
-                                    break;
-                                } else if (retorno['tipo'] == 'info') {
-                                    console.info(`${retorno['descricao']}: ${retorno['mensagem']? retorno['mensagem'] : '<sem conteúdo>'}`);
-                                    continue;
-                                } else if (retorno['tipo'] == 'controle') {
-                                    if (retorno['dados']['tag']=='status') {
-                                        divResposta.innerHTML = `<i>${retorno['dados']['conteudo']}<i> <span class='dots'><span class='dot1'>.</span><span class='dot2'>.</span><span class='dot3'>.</span></span>`;
-                                    }
-                                    continue;
-                                } else if (retorno['tipo'] == 'dados') {
-                                    if (retorno['dados']['tag']=='frag-resposta-llm') {
-                                        textoAcumulado += retorno['dados']['conteudo']
-                                        divResposta.innerHTML = textoAcumulado
-                                    } else if (retorno['dados']['tag']=='resposta-completa-llm') {
-                                        var dados_resposta = retorno['dados']['conteudo'];
-                                        divResposta.innerHTML = formatarResposta(dados_resposta);
-                                        contexto = dados_resposta.resposta_llama.context;
-                                        console.log(dados_resposta);
-                                        habilitarCampos = true;
-                                    }
-                                    continue;
-                                } else {
-                                    console.info(retorno);
-                                    continue;
-                                }
-                            } catch (erro) {
-                                console.error(erro);
-                                console.info(linha);
+
+                        var linha = valores_decodificados;
+                        if (linha.trim() === '') continue;
+                        try {
+                            var retorno = JSON.parse(linha.trim());
+                            if (retorno['tipo'] == 'erro') {
+                                console.error(`${retorno['descricao']}: ${retorno['mensagem']}`);
+                                divResposta.classList.remove("mensagem-recebida");
+                                divResposta.classList.add("mensagem-erro");
+                                divResposta.innerHTML = retorno['mensagem'];
                                 habilitarCampos = true;
                                 break;
+                            } else if (retorno['tipo'] == 'info') {
+                                console.info(`${retorno['descricao']}: ${retorno['mensagem']? retorno['mensagem'] : '<sem conteúdo>'}`);
+                                continue;
+                            } else if (retorno['tipo'] == 'controle') {
+                                if (retorno['dados']['tag']=='status') {
+                                    divResposta.innerHTML = `<i>${retorno['dados']['conteudo']}<i> <span class='dots'><span class='dot1'>.</span><span class='dot2'>.</span><span class='dot3'>.</span></span>`;
+                                }
+                                continue;
+                            } else if (retorno['tipo'] == 'dados') {
+                                if (retorno['dados']['tag']=='frag-resposta-llm') {
+                                    textoAcumulado += retorno['dados']['conteudo']
+                                    divResposta.innerHTML = textoAcumulado
+                                } else if (retorno['dados']['tag']=='resposta-completa-llm') {
+                                    console.log('Sucesso')
+                                    var dados_resposta = retorno['dados']['conteudo'];
+                                    divResposta.innerHTML = formatarResposta(dados_resposta);
+                                    contexto = retorno['dados']['conteudo']['contexto'];
+                                    habilitarCampos = true;
+                                }
+                                continue;
+                            } else {
+                                console.info(retorno);
+                                continue;
                             }
+                        } catch (erro) {
+                            console.error(erro);
+                            console.info(linha);
+                            habilitarCampos = true;
+                            break;
                         }
                     }
                 } catch (erro) {

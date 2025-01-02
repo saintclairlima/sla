@@ -63,11 +63,6 @@ class Chat:
         history = history or []
         question = question.lower()
         
-        yield MensagemControle(
-            descricao='Informação de Status',
-            dados={'tag':'status', 'conteudo':'Consultando fontes'}
-        ).json() + '\n'
-        
         # Recupere os documentos uma única vez
         start_time = time()
         retrieved_docs = self.retriever.get_relevant_documents(question)
@@ -103,10 +98,6 @@ class Chat:
             max_retries=self.wandb_run.config.max_fallback_retries,
         )
         
-        yield MensagemControle(
-            descricao='Informação de Status',
-            dados={'tag':'status', 'conteudo':'Gerando resposta'}
-            ).json() + '\n'
         start_time = time()
         response = self.llm.invoke(self.adjusted_prompt)
         tempo_geracao_resposta = time() - start_time
@@ -114,9 +105,9 @@ class Chat:
         
         print(f"\n\nCHAT HISTORY =================================== {history}\n\n")
         history.append((question, response.content))
-        print(f"\n\nFINAL RESULT =================================== {history}\n\n")
+        print(f"\n\nUPDATED HISTORY =================================== {history}\n\n")
         
-        yield MensagemDados(
+        msg = MensagemDados(
                 descricao='Resposta completa',
                 dados={
                     'tag': 'resposta-completa-llm',
@@ -124,6 +115,7 @@ class Chat:
                         "pergunta": question,
                         "documentos": [{'conteudo': doc.page_content, 'fonte': doc.metadata['source']} for doc in retrieved_docs],
                         "resposta_llm": str(response), # AFAZER: tratar formato para poder fazer JSON
+                        "contexto": history,
                         "resposta": response.content,
                         "tempo_consulta": tempo_consulta,
                         "tempo_inicio_resposta": None,
@@ -131,4 +123,6 @@ class Chat:
                     }
                 }
             ).json()
-        return
+        
+        print('>>>>>>>\n\n\n\n\n', msg)
+        return msg
