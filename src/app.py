@@ -4,9 +4,10 @@ from time import time
 from types import SimpleNamespace
 import wandb
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from prompts import load_chat_prompt
 from chain import load_vector_store
-from mensagens import MensagemInfo, MensagemErro, MensagemControle, MensagemDados
+from mensagens import MensagemDados
 
 
 class Chat:
@@ -91,12 +92,19 @@ class Chat:
         
         self.adjusted_prompt = self.qa_prompt.format(question=f"{question}", context=f"{combined_context}")
         
-        self.llm = ChatOpenAI(
-            openai_api_key=openai_api_key,
-            model_name=self.wandb_run.config.model_name,
+        self.llm = ChatOllama(
+            model=self.wandb_run.config.model_name,
             temperature=self.wandb_run.config.chat_temperature,
-            max_retries=self.wandb_run.config.max_fallback_retries,
+            base_url='http://localhost:11434',
+            streaming=False,
         )
+        
+        # self.llm = ChatOpenAI(
+        #     openai_api_key=openai_api_key,
+        #     model_name=self.wandb_run.config.model_name,
+        #     temperature=self.wandb_run.config.chat_temperature,
+        #     max_retries=self.wandb_run.config.max_fallback_retries,
+        # )
         
         start_time = time()
         response = self.llm.invoke(self.adjusted_prompt)
