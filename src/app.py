@@ -1,11 +1,12 @@
 """A Simple chatbot that uses the LangChain and Gradio UI to answer questions about wandb documentation."""
 import os
+from time import time
 from types import SimpleNamespace
 import wandb
 from langchain_openai import ChatOpenAI
 from prompts import load_chat_prompt
-from config import default_config
-from chain import get_answer, load_chain, load_vector_store
+from chain import load_vector_store
+from mensagens import MensagemInfo, MensagemErro, MensagemControle, MensagemDados
 
 
 class Chat:
@@ -61,8 +62,16 @@ class Chat:
         self.retriever = self.vector_store.as_retriever()
         history = history or []
         question = question.lower()
+        
+        yield MensagemControle(
+            descricao='Informação de Status',
+            dados={'tag':'status', 'conteudo':'Consultando fontes'}
+        ).json() + '\n'
+        
         # Recupere os documentos uma única vez
+        start_time = time()
         retrieved_docs = self.retriever.get_relevant_documents(question)
+        tempo_consulta = time() - start_time
         print("\n\n retrieved_docs ========================================================= \n\n")
         print(retrieved_docs)
         
@@ -94,9 +103,32 @@ class Chat:
             max_retries=self.wandb_run.config.max_fallback_retries,
         )
         
+        yield MensagemControle(
+            descricao='Informação de Status',
+            dados={'tag':'status', 'conteudo':'Gerando resposta'}
+            ).json() + '\n'
+        start_time = time()
         response = self.llm.invoke(self.adjusted_prompt)
+        tempo_geracao_resposta = time() - start_time
+        
         
         print(f"\n\nCHAT HISTORY =================================== {history}\n\n")
-        history.append((question, response))
+        history.append((question, response.content))
         print(f"\n\nFINAL RESULT =================================== {history}\n\n")
-        return history
+        
+        yield MensagemDados(
+                descricao='Resposta completa',
+                dados={
+                    'tag': 'resposta-completa-llm',
+                    'conteudo': {
+                        "pergunta": question,
+                        "documentos": [{'conteudo': doc.page_content, 'fonte': doc.metadata['source']} for doc in retrieved_docs],
+                        "resposta_llm": str(response), # AFAZER: tratar formato para poder fazer JSON
+                        "resposta": response.content,
+                        "tempo_consulta": tempo_consulta,
+                        "tempo_inicio_resposta": None,
+                        "tempo_llm_total": tempo_geracao_resposta
+                    }
+                }
+            ).json()
+        return
