@@ -43,7 +43,11 @@ async def gerar_resposta(dadosRecebidos: dict):
 @controller.get('/chat/')
 async def pagina_chat(url_redirec: str = Query(None)):
     with open('web/chat.html', 'r', encoding='utf-8') as arquivo: conteudo_html = arquivo.read()
-        
+
+    # usado para poder acessar do colab
+    if url_redirec:
+        environment.TAGS_SUBSTITUICAO_HTML['TAG_INSERCAO_URL_HOST'] = url_redirec
+            
     # substituindo as tags dentro do HTML, para maior controle
     for tag, valor in TAGS_SUBSTITUICAO_HTML.items():
         conteudo_html = conteudo_html.replace(tag, valor)
