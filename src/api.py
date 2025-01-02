@@ -21,10 +21,10 @@ controller.add_middleware(
 chat = Chat(config=default_config)
 
 TAGS_SUBSTITUICAO_HTML= {
-    'TAG_INSERCAO_URL_HOST': 'http://localhost:8000', # aqui tem que ser o IP:porta que a api tá rodando
+    'TAG_INSERCAO_URL_HOST': 'http://localhost:8000',} # aqui tem que ser o IP:porta que a api tá rodando
                                                       # Pra não precisar mexer no html cada vez que mudar de IP
                                                       # em produção. Pode colocar lá no config.py, se preferir
-}
+
 
 @controller.post('/chat/enviar_pergunta/')
 async def gerar_resposta(dadosRecebidos: dict):
@@ -33,10 +33,6 @@ async def gerar_resposta(dadosRecebidos: dict):
     chave_openai = ''
     
     resultado = chat(question=pergunta, history=historico, openai_api_key=chave_openai)
-    #resultado = chat(question=pergunta, history=historico, openai_api_key=chave_openai)
-    
-    # Aqui pode formatar o resultado para ficar de acordo com o que a página html for esperar pra imprimir a resposta
-    
     return resultado
 
 
@@ -46,7 +42,7 @@ async def pagina_chat(url_redirec: str = Query(None)):
 
     # usado para poder acessar do colab
     if url_redirec:
-        environment.TAGS_SUBSTITUICAO_HTML['TAG_INSERCAO_URL_HOST'] = url_redirec
+        TAGS_SUBSTITUICAO_HTML['TAG_INSERCAO_URL_HOST'] = url_redirec
             
     # substituindo as tags dentro do HTML, para maior controle
     for tag, valor in TAGS_SUBSTITUICAO_HTML.items():
