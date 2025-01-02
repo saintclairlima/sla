@@ -85,7 +85,7 @@ class Chat:
         
         self.qa_prompt = load_chat_prompt(f"{self.chat_prompt_dir}/prompt.json")
         
-        self.adjusted_prompt = self.qa_prompt.format(question="{question}", context="{combined_context}")
+        self.adjusted_prompt = self.qa_prompt.format(question=f"{question}", context=f"{combined_context}")
         
         self.llm = ChatOpenAI(
             openai_api_key=openai_api_key,
