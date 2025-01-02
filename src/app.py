@@ -98,4 +98,5 @@ class Chat:
         
         print(f"\n\nCHAT HISTORY =================================== {history}\n\n")
         history.append((question, response))
-        return history, history
+        print(f"\n\nFINAL RESULT =================================== {history}\n\n")
+        return history
