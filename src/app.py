@@ -1,11 +1,11 @@
 """A Simple chatbot that uses the LangChain and Gradio UI to answer questions about wandb documentation."""
 import os
 from types import SimpleNamespace
-
-import gradio as gr
 import wandb
-from chain import get_answer, load_chain, load_vector_store
+from langchain_openai import ChatOpenAI
+from prompts import load_chat_prompt
 from config import default_config
+from chain import get_answer, load_chain, load_vector_store
 
 
 class Chat:
@@ -56,19 +56,16 @@ class Chat:
             self.vector_store = load_vector_store(
                 wandb_run=self.wandb_run, openai_api_key=openai_key
             )
-        if self.chain is None:
-            self.chain = load_chain(
-                self.wandb_run, self.vector_store, openai_api_key=openai_key
-            )
-
+        
+            
+        self.retriever = self.vector_store.as_retriever()
         history = history or []
         question = question.lower()
         # Recupere os documentos uma única vez
-        retriever = self.vector_store.as_retriever()
-        retrieved_docs = retriever.get_relevant_documents(question)
+        retrieved_docs = self.retriever.get_relevant_documents(question)
         print("\n\n retrieved_docs ========================================================= \n\n")
         print(retrieved_docs)
-
+        
         # Obtenha o contexto extra manualmente
         unique_sources = set(doc.metadata["source"] for doc in retrieved_docs)
         print("\n\n unique source ========================================================= \n\n")
@@ -81,98 +78,24 @@ class Chat:
 
         print("\n\n COMBINADO O TEXTO ========================================================= \n\n")
         print(combined_context)
-
-        # Obtenha a resposta, passando os documentos e o contexto
-        response = get_answer(
-            chain=self.chain,
-            question=question,
-            chat_history=history,
-            retrieved_docs=retrieved_docs,
-            context=combined_context,
+        
+        self.chat_prompt_dir = self.wandb_run.use_artifact(
+            self.wandb_run.config.chat_prompt_artifact, type="prompt"
+        ).download()
+        
+        self.qa_prompt = load_chat_prompt(f"{self.chat_prompt_dir}/prompt.json")
+        
+        self.adjusted_prompt = self.qa_prompt.format(question="{question}", context="{combined_context}")
+        
+        self.llm = ChatOpenAI(
+            openai_api_key=openai_api_key,
+            model_name=self.wandb_run.config.model_name,
+            temperature=self.wandb_run.config.chat_temperature,
+            max_retries=self.wandb_run.config.max_fallback_retries,
         )
+        
+        response = self.llm.invoke(self.adjusted_prompt)
+        
         print(f"\n\nCHAT HISTORY =================================== {history}\n\n")
         history.append((question, response))
         return history, history
-
-
-
-with gr.Blocks() as demo:
-    gr.HTML(
-        """
-    <style>
-        :root{
-            --azul-claro: #1A73E8;
-            --azul-medio: #145dbd;
-            --azul-escuro: #163C70;
-            --branco-fundo-1: #f6f6f6;
-            --branco-fundo-2: #f8f9fa;
-            --branco-fundo-3: #ccc;
-            --cinza-claro: #e9ecef;
-            --cinza-medio: #9e9c9c;
-            --cinza-escuro: #616161;
-        }
-        .cabecalho{
-            width: 100%;
-            background-color: var(--azul-escuro);
-        }
-        .titulo{
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            min-height: 80px;
-        }
-        .logo{
-            padding-right: 15px;
-            align-self: center;
-        }
-        .logo img{
-            height: 40px;
-        }
-    </style>
-
-    <div class="cabecalho">
-        <div class="titulo">
-            <div class="logo"><img src="/web/img/logo_al.png"></div>
-            <div class="rotulo-titulo"><h1 style="color:white; margin-top:20px;">Daphane</h1></div>
-        </div>
-    </div>
-        """
-    )
-    state = gr.State()
-    chatbot = gr.Chatbot()
-
-    with gr.Row():
-        question = gr.Textbox(
-            placeholder="Digite sua pergunta",
-            label="",
-            show_label=False
-        )
-        openai_api_key = gr.Textbox(
-            type="password",
-            label="Enter your OpenAI API key here",
-            visible=False
-        )
-        botao = gr.Button("Enviar")
-        
-    question.submit(
-        Chat(
-            config=default_config,
-        ),
-        [question, state, openai_api_key],
-        [chatbot, state],
-    )
-    botao.click(
-        Chat(
-            config=default_config,
-        ),
-        [question, state, openai_api_key],
-        [chatbot, state],
-    )
-
-
-if __name__ == "__main__":
-    demo.queue().launch(
-        share=False, server_name="0.0.0.0", server_port=8884, show_error=True
-    )

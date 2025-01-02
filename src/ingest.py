@@ -30,6 +30,7 @@ def load_documents(data_dir: str) -> List[Document]:
     Returns:
         List[Document]: A list of documents
     """
+    print(data_dir)
     md_files = list(map(str, pathlib.Path(data_dir).glob("*.md")))
     print(f"\n\nArquivos encontrados ========================================= \n\n: {md_files}")  # Debug
     documents = [

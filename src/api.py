@@ -27,13 +27,13 @@ TAGS_SUBSTITUICAO_HTML= {
 }
 
 @controller.post('/chat/enviar_pergunta/')
-async def gerar_resposta(dadosRecebidos):
-    resultado = chat()
+async def gerar_resposta(dadosRecebidos: dict):
     pergunta = dadosRecebidos['pergunta']
-    historico = dadosRecebidos['historico']
-    chave_openai = dadosRecebidos['chave_openai']
+    historico = dadosRecebidos['contexto']
+    chave_openai = ''
     
     resultado = chat(question=pergunta, history=historico, openai_api_key=chave_openai)
+    #resultado = chat(question=pergunta, history=historico, openai_api_key=chave_openai)
     
     # Aqui pode formatar o resultado para ficar de acordo com o que a página html for esperar pra imprimir a resposta
     
