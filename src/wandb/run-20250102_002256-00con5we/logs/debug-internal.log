@@ -1,0 +1,8 @@
+{"time":"2025-01-02T00:22:56.254157483-03:00","level":"INFO","msg":"using version","core version":"0.19.1"}
+{"time":"2025-01-02T00:22:56.254217675-03:00","level":"INFO","msg":"created symlink","path":"/home/saintclair/Downloads/sla/src/wandb/run-20250102_002256-00con5we/logs/debug-core.log"}
+{"time":"2025-01-02T00:22:56.362058204-03:00","level":"INFO","msg":"created new stream","id":"00con5we"}
+{"time":"2025-01-02T00:22:56.362203428-03:00","level":"INFO","msg":"stream: started","id":"00con5we"}
+{"time":"2025-01-02T00:22:56.362324727-03:00","level":"INFO","msg":"sender: started","stream_id":"00con5we"}
+{"time":"2025-01-02T00:22:56.36228927-03:00","level":"INFO","msg":"writer: Do: started","stream_id":"00con5we"}
+{"time":"2025-01-02T00:22:56.362435612-03:00","level":"INFO","msg":"handler: started","stream_id":"00con5we"}
+{"time":"2025-01-02T00:22:56.922005577-03:00","level":"INFO","msg":"Starting system monitor"}

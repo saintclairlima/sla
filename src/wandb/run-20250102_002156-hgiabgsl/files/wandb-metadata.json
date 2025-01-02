@@ -1,0 +1,31 @@
+{
+  "os":  "Linux-5.15.0-130-generic-x86_64-with-glibc2.35",
+  "python":  "CPython 3.10.12",
+  "startedAt":  "2025-01-02T03:21:56.623158Z",
+  "program":  "/home/saintclair/Downloads/sla/src/ingest.py",
+  "codePath":  "src/ingest.py",
+  "git":  {
+    "remote":  "https://github.com/saintclairlima/sla.git",
+    "commit":  "a22b5cb5aa7ec99a45488d48a848713f0d067513"
+  },
+  "email":  "caehevanras@gmail.com",
+  "root":  "/home/saintclair/Downloads/sla/src",
+  "host":  "pc",
+  "executable":  "/home/saintclair/Downloads/sla/chat-env/bin/python3",
+  "codePathLocal":  "ingest.py",
+  "cpu_count":  2,
+  "cpu_count_logical":  4,
+  "disk":  {
+    "/":  {
+      "total":  "470887243776",
+      "used":  "293615153152"
+    }
+  },
+  "memory":  {
+    "total":  "16655273984"
+  },
+  "cpu":  {
+    "count":  2,
+    "countLogical":  4
+  }
+}

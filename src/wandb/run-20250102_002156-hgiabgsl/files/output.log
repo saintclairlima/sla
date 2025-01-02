@@ -1,0 +1,11 @@
+../documentos_base
+
+
+Arquivos encontrados =========================================
+
+: ['../documentos_base/lei-maria-da-penha-titulo7.md', '../documentos_base/lei-maria-da-penha-titulo3cap2.md', '../documentos_base/lei-maria-da-penha-titulo3cap1.md', '../documentos_base/lei-maria-da-penha-titulo1.md', '../documentos_base/lei-maria-da-penha-titulo4cap2sec4.md', '../documentos_base/lei-maria-da-penha-titulo3cap3.md', '../documentos_base/lei-maria-da-penha-titulo4cap2sec2.md', '../documentos_base/lei-maria-da-penha-titulo6.md', '../documentos_base/lei-maria-da-penha-titulo4cap2sec3.md', '../documentos_base/lei-maria-da-penha-titulo2cap2.md', '../documentos_base/lei-maria-da-penha-titulo4cap2sec1.md', '../documentos_base/lei-maria-da-penha-titulo2cap1.md', '../documentos_base/lei-maria-da-penha-titulo4cap1.md', '../documentos_base/lei-maria-da-penha-titulo4cap3.md', '../documentos_base/lei-maria-da-penha-titulo4cap4.md', '../documentos_base/lei-maria-da-penha-titulo5.md']
+/home/saintclair/Downloads/sla/src/ingest.py:88: LangChainDeprecationWarning: Since Chroma 0.4.x the manual persistence method is no longer supported as docs are automatically persisted.
+  vector_store.persist()
+/home/saintclair/Downloads/sla/src/ingest.py:102: PydanticDeprecatedSince20: The `json` method is deprecated; use `model_dump_json` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.10/migration/
+  f.write(document.json() + "\n")
+[34m[1mwandb[0m: Adding directory to artifact (./vector_store)... Done. 0.1s

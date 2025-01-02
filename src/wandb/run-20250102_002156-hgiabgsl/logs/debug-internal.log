@@ -1,0 +1,17 @@
+{"time":"2025-01-02T00:21:56.629989524-03:00","level":"INFO","msg":"using version","core version":"0.19.1"}
+{"time":"2025-01-02T00:21:56.630047351-03:00","level":"INFO","msg":"created symlink","path":"/home/saintclair/Downloads/sla/src/wandb/run-20250102_002156-hgiabgsl/logs/debug-core.log"}
+{"time":"2025-01-02T00:21:56.737874667-03:00","level":"INFO","msg":"created new stream","id":"hgiabgsl"}
+{"time":"2025-01-02T00:21:56.737982528-03:00","level":"INFO","msg":"stream: started","id":"hgiabgsl"}
+{"time":"2025-01-02T00:21:56.738065706-03:00","level":"INFO","msg":"writer: Do: started","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:21:56.738136671-03:00","level":"INFO","msg":"sender: started","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:21:56.738071694-03:00","level":"INFO","msg":"handler: started","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:21:57.432000336-03:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-01-02T00:22:15.991513558-03:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-01-02T00:22:15.993365586-03:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-01-02T00:22:16.992984323-03:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading artifact vector_store","runtime_seconds":1.438342363,"subtasks":[{"desc":"23fdb132-99af-4342-9e4b-5259c6656e9c/length.bin","runtime_seconds":0.325573285,"progress":"3.9KB/3.9KB"},{"desc":"chroma.sqlite3","runtime_seconds":0.32466017,"progress":"512.0KB/1.8MB"}]},{"desc":"uploading config.yaml","runtime_seconds":0.365640932,"progress":"783B/783B"}],"total_operations":2}}
+{"time":"2025-01-02T00:22:19.931521517-03:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-01-02T00:22:21.363675074-03:00","level":"INFO","msg":"stream: closing","id":"hgiabgsl"}
+{"time":"2025-01-02T00:22:21.363724052-03:00","level":"INFO","msg":"handler: closed","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:22:21.363752283-03:00","level":"INFO","msg":"writer: Close: closed","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:22:21.36376937-03:00","level":"INFO","msg":"sender: closed","stream_id":"hgiabgsl"}
+{"time":"2025-01-02T00:22:21.363870046-03:00","level":"INFO","msg":"stream: closed","id":"hgiabgsl"}
